@@ -3,6 +3,7 @@ package biz
 import (
 	"strconv"
 
+	"Week02/internal/code"
 	"Week02/internal/dao"
 
 	"github.com/pkg/errors"
@@ -27,7 +28,7 @@ func (b *biz) GetUserName(id string) (name string, err error) {
 	}
 
 	name, err = b.dao.GetUserName(userID)
-	if dao.IsNotFoundRecord(err) {
+	if err == code.ErrRecordNotFound {
 		name = "Unknown"
 		err = nil
 	}

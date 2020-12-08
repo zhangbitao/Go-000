@@ -3,6 +3,8 @@ package dao
 import (
 	"database/sql"
 
+	"Week02/internal/code"
+
 	"github.com/pkg/errors"
 )
 
@@ -22,7 +24,7 @@ func (d *dao) GetUserName(id int64) (name string, err error) {
 	rows, err := d.db.Query("select name from user where id = ? limit 1", id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return "", recordNotFound
+			return "", code.ErrRecordNotFound
 		}
 
 		return "", errors.Wrap(err, "select failed")
