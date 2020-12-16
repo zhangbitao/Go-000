@@ -1,0 +1,38 @@
+syntax = "proto3";
+package dialogue.service.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "dialogue/service/v1;v1";
+
+service DialogueService {
+	rpc AddQA (AddQARequest) returns (AddQAReply)  {
+		option (google.api.http) = {
+			post: "/v1/AddQA"
+			body: "*"
+			};
+	}
+
+	rpc Talk (TalkRequest) returns (TalkReply) {
+		option (google.api.http) = {
+			get: "/v1/Talk"
+			body: ""
+		};
+	}
+}
+
+message AddQARequest {
+	string question = 1;
+	repeated string answers = 2;
+}
+
+message AddQAReply {
+}
+
+message TalkRequest {
+	string query = 1;
+}
+
+message TalkReply {
+	string tts = 1;
+}
