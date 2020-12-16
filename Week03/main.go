@@ -41,20 +41,29 @@ func main() {
 	s2 := grpc.New(9000)
 
 	group.Go(func() error {
+		go func() {
+			<-ctx.Done()
+			s1.Stop(context.TODO())
+		}()
 		return s1.Start(ctx)
 	})
 	group.Go(func() error {
+		go func() {
+			<-ctx.Done()
+			s2.Stop(context.TODO())
+		}()
 		return s2.Start(ctx)
 	})
 	group.Go(func() error {
 		// wait for quit signal
 		shutdown := make(chan struct{})
 		registerSignal(shutdown)
-		<-shutdown
-
-		s1.Stop(ctx)
-		s2.Stop(ctx)
-		return nil
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-shutdown:
+			return nil
+		}
 	})
 
 	if err := group.Wait(); err != nil {
